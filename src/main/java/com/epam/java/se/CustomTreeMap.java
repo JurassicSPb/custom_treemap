@@ -19,13 +19,12 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     private int size(Node node) {
         if (node == null) {
             return 0;
-        }
-        else return node.size;
+        } else return node.size;
     }
 
     @Override
     public boolean isEmpty() {
-        return true;
+        return root == null;
     }
 
     @Override
@@ -33,7 +32,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         Objects.requireNonNull(key);
 
         if (root == null) return false;
-        root.key.compareTo((K) key);
+//        root.key.compareTo((K) key);
         return find(root, (K) key) != null;
     }
 
@@ -49,7 +48,19 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
 
     @Override
     public V get(Object key) {
-        return null;
+        Objects.requireNonNull(key);
+        return get(root, (K)key);
+    }
+
+    private V get(Node<K, V> node, K key) {
+        if (node == null) {
+            return null;
+        }
+        if (node.key.compareTo(key) > 0) {
+            return get(node.left, key);
+        } else if (node.key.compareTo(key) < 0) {
+            return get(node.right, key);
+        } else return node.value;
     }
 
     @Override
@@ -93,12 +104,12 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     }
 
     @Override
-    public void putAll(Map<? extends K, ? extends V> m) {
+    public void clear() {
 
     }
 
     @Override
-    public void clear() {
+    public void putAll(Map<? extends K, ? extends V> m) {
 
     }
 

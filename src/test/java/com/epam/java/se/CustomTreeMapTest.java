@@ -36,6 +36,14 @@ public class CustomTreeMapTest {
     }
 
     @Test
+    public void testThatNotNewMapIsNotEmpty() {
+        m.put(10, "abc");
+        m.put(20, "rtr");
+
+        assertThat(m.isEmpty(), is(false));
+    }
+
+    @Test
     public void testThatOnNewMapContainKeyMethodReturnFalseForAnyObject() {
         assertThat(m.containsKey(new Integer(1)), is(false));
     }
@@ -70,17 +78,6 @@ public class CustomTreeMapTest {
 
         assertFalse(m.containsValue(oldValue));
         assertTrue(m.containsValue(newValue));
-    }
-
-    @Test
-    public void testThatIfWePutNewValueOnExistingKeyPreviousValueWillBeReturned() {
-        String oldValue = "aaaa";
-        String newValue = "bbbb";
-
-        m.put(1, oldValue);
-        String returnedValue = m.put(1, newValue);
-
-        assertThat(oldValue, is(equalTo(returnedValue)));
     }
 
     @Test(expected = NullPointerException.class)
@@ -123,10 +120,6 @@ public class CustomTreeMapTest {
         );
     }
 
-    @Test(expected = ClassCastException.class)
-    public void testValueContainsMethodThrowsExceptionOnWrongInputValueClass() {
-    }
-
     @Test
     public void testThatMapCalculateItsSizeProperly() {
         m.put(new Integer(6), "abc");
@@ -135,6 +128,48 @@ public class CustomTreeMapTest {
 
         assertThat(m.size(), is(3));
     }
+    @Test
+    public void testContainsValueMethodCanSearchMultipleValues() {
+        String value = "aaaa";
+        String value2 = "bbbb";
 
+        m.put(1, value);
+        m.put(2, value2);
 
+        assertTrue(m.containsValue(value));
+        assertTrue(m.containsValue(value2));
+    }
+
+    @Test
+    public void testThatGetMethodCanReturnValueByKey() {
+        String value = "aaaa";
+        String value2 = "bbbb";
+
+        m.put(1, value);
+        m.put(2, value2);
+
+        assertThat(m.get(2), is(value2));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testThatGetMethodThrowsExceptionOnNullKey(){
+        m.get(null);
+    }
+
+    @Test
+    public void testValueContainsMethodReturnsFalseOnWrongInputValueClass() {}
+
+    @Test
+    public void testThatWeCanDeleteByKey() {
+
+    }
+    @Test
+    public void testRemoveUnexistentKeyReturnsNull() {
+
+    }
+
+    @Test
+    public void testThatWeCanClearEntireMap() {
+
+    }
 }
