@@ -31,8 +31,9 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     public boolean containsKey(Object key) {
         Objects.requireNonNull(key);
 
-        if (root == null) return false;
-//        root.key.compareTo((K) key);
+        if (root == null) {
+            return false;
+        }
         return find(root, (K) key) != null;
     }
 
@@ -41,15 +42,15 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         if (root == null) return false;
         if (root.value == null) {
             return value == null;
-        } else {
-            return root.value.equals(value);
         }
+        return getRightValue(root, (V) value) != null ||
+                getLeftValue(root, (V) value) != null;
     }
 
     @Override
     public V get(Object key) {
         Objects.requireNonNull(key);
-        return get(root, (K)key);
+        return get(root, (K) key);
     }
 
     private V get(Node<K, V> node, K key) {
@@ -61,6 +62,26 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         } else if (node.key.compareTo(key) < 0) {
             return get(node.right, key);
         } else return node.value;
+    }
+
+    private V getRightValue(Node<K, V> node, V value) {
+        if (node == null) {
+            return null;
+        }
+        if (!node.value.equals(value)) {
+            return getRightValue(node.right, value);
+        }
+        return node.value;
+    }
+
+    private V getLeftValue(Node<K, V> node, V value) {
+        if (node == null) {
+            return null;
+        }
+        if (!node.value.equals(value)) {
+            return getRightValue(node.left, value);
+        }
+        return node.value;
     }
 
     @Override

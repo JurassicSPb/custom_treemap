@@ -132,12 +132,40 @@ public class CustomTreeMapTest {
     public void testContainsValueMethodCanSearchMultipleValues() {
         String value = "aaaa";
         String value2 = "bbbb";
+        String value3 = "ccccc";
 
         m.put(1, value);
         m.put(2, value2);
+        m.put(3, value3);
 
         assertTrue(m.containsValue(value));
         assertTrue(m.containsValue(value2));
+        assertTrue(m.containsValue(value3));
+    }
+
+    @Test
+    public void testContainsValueMethodDoesntContainValueThatIsNotPresent() {
+        String value = "aaaa";
+        String value2 = "ffff";
+        m.put(1, value);
+
+        assertThat(m.containsValue(value2), is(false));
+    }
+
+    @Test
+    public void testValueContainsMethodReturnsFalseOnWrongInputValueClass() {
+        String value = "aaaa";
+        m.put(1, value);
+
+        assertThat(m.containsValue(222), is(false));
+    }
+
+    @Test
+    public void testContainsKeyMethodDoesntContainValueThatIsNotPresent() {
+        String value = "aaaa";
+        m.put(1, value);
+
+        System.out.println(m.containsKey(222));
     }
 
     @Test
@@ -155,9 +183,6 @@ public class CustomTreeMapTest {
     public void testThatGetMethodThrowsExceptionOnNullKey(){
         m.get(null);
     }
-
-    @Test
-    public void testValueContainsMethodReturnsFalseOnWrongInputValueClass() {}
 
     @Test
     public void testThatWeCanDeleteByKey() {
