@@ -6,6 +6,9 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * Class represents an implementation of Custom TreeMap which is
+ * a Binary Search Tree with balanced Red-Black Tree put method.
+ * <p>
  * Created by Мария on 26.03.2017.
  */
 public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
@@ -13,6 +16,13 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     private static final boolean RED = true;
     private static final boolean BLACK = false;
 
+    /**
+     * Calculates a size of TreeMap
+     * Associated methods:
+     *
+     * @return the number of key-value mappings in this map
+     * @see CustomTreeMap#size(Node)
+     */
     @Override
     public int size() {
         return size(root);
@@ -24,11 +34,20 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         } else return node.size;
     }
 
+    /**
+     * @return true if this map contains no key-value mappings
+     */
     @Override
     public boolean isEmpty() {
         return root == null;
     }
 
+    /**
+     * @param key key whose presence in this map is to be tested
+     * @return true if this map contains a mapping for
+     * the specified key.
+     * @throws NullPointerException if the specified key is null.
+     */
     @Override
     public boolean containsKey(Object key) {
         Objects.requireNonNull(key);
@@ -39,6 +58,16 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         return find(root, (K) key) != null;
     }
 
+    /**
+     * Searches values through entire TreeMap
+     * Associated methods:
+     *
+     * @param value value whose presence in this map is to be tested,
+     *              allows null values.
+     * @return true specified value is presented in one or more keys
+     * @see CustomTreeMap#getLeftValue(Node, Object)
+     * @see CustomTreeMap#getRightValue(Node, Object)
+     */
     @Override
     public boolean containsValue(Object value) {
         if (root == null) return false;
@@ -69,6 +98,12 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         return node.value;
     }
 
+    /**
+     * @param key the key whose associated value is to be returned
+     * @return value to which the specified key is or null
+     * if this map contains no mapping for the key.
+     * @throws NullPointerException if the specified key is null.
+     */
     @Override
     public V get(Object key) {
         Objects.requireNonNull(key);
@@ -86,6 +121,28 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         } else return node.value;
     }
 
+    /**
+     * Put key-value pairs in this map. Allows null values.
+     * If the map previously contained a mapping for
+     * the key, the old value is replaced by the specified value.
+     * Keys are sorted by concrete rules: if child key is smaller
+     * than parent key it will be placed left in tree and visa versa.
+     * This method is balanced by implementation of red-black sorting
+     * rules, so the height of branches of this map has minimum difference.
+     * Associated methods:
+     *
+     * @param key   key with which the specified value is to be associated.
+     * @param value value to be associated with the specified key.
+     * @return the previous value associated with key, or
+     * null if there was no mapping for key.
+     * @throws NullPointerException if the specified key is null.
+     * @see CustomTreeMap#put(Node, Comparable, Object)
+     * @see CustomTreeMap#find(Node, Comparable)
+     * @see CustomTreeMap#rotateLeft(Node)
+     * @see CustomTreeMap#rotateRight(Node)
+     * @see CustomTreeMap#flipColors(Node)
+     * @see CustomTreeMap#isRed(Node)
+     */
     @Override
     public V put(K key, V value) {
         Objects.requireNonNull(key);
@@ -117,6 +174,19 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         }
         node.size = size(node.left) + size(node.right) + 1;
         return node;
+    }
+
+    private Node<K, V> find(Node<K, V> node, K key) {
+        if (node == null) {
+            return null;
+        }
+        if (node.key.equals(key)) {
+            return node;
+        } else if (node.key.compareTo(key) > 0) {
+            return find(node.left, key);
+        } else {
+            return find(node.right, key);
+        }
     }
 
     private Node rotateRight(Node node) {
@@ -154,19 +224,19 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         return node.color == RED;
     }
 
-    private Node<K, V> find(Node<K, V> node, K key) {
-        if (node == null) {
-            return null;
-        }
-        if (node.key.equals(key)) {
-            return node;
-        } else if (node.key.compareTo(key) > 0) {
-            return find(node.left, key);
-        } else {
-            return find(node.right, key);
-        }
-    }
-
+    /**
+     * Removes key-value pairs in this map. And than rebuild
+     * this map for keep sorting order.
+     * Associated methods:
+     *
+     * @param key key whose mapping is to be removed from the map
+     * @return the previous value associated with key, or
+     * null if there was no mapping for key.
+     * @throws NullPointerException if the specified key is null.
+     * @see CustomTreeMap#remove(Node, Comparable)
+     * @see CustomTreeMap#removeMin(Node)
+     * @see CustomTreeMap#findMin(Node)
+     */
     @Override
     public V remove(Object key) {
         Objects.requireNonNull(key);
@@ -219,6 +289,9 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         } else return findMin(node.left);
     }
 
+    /**
+     * Clears entire map.
+     */
     @Override
     public void clear() {
         if (root != null) {
@@ -264,5 +337,4 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         }
 
     }
-
 }
