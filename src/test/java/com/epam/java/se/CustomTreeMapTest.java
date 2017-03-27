@@ -9,6 +9,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -184,13 +185,44 @@ public class CustomTreeMapTest {
         m.get(null);
     }
 
-    @Test
-    public void testThatWeCanDeleteByKey() {
 
+    @Test
+    public void testThatWeCanRemoveByKey() {
+        m.put(1, "aaa");
+        m.put(2, "ccc");
+        m.put(12, "eee");
+        m.put(6, "ddd");
+        m.put(1, "vvv");
+
+        m.remove(12);
+        m.remove(6);
+
+        assertThat(m.containsKey(12), is(false));
+        assertThat(m.containsKey(6), is(false));
+        assertThat(m.containsKey(2), is(true));
     }
+
+    @Test (expected = NullPointerException.class)
+    public void testRemoveWithNullKey() {
+        m.remove(null);
+    }
+
+    @Test
+    public void testThatAfterRemoveSizeWillChange() {
+        m.put(12, "eee");
+        m.put(6, "ddd");
+        m.put(1, "vvv");
+        m.put(20, "vvv");
+
+        m.remove(12);
+        m.remove(6);
+
+        assertThat(m.size(), is(2));
+    }
+
     @Test
     public void testRemoveUnexistentKeyReturnsNull() {
-
+        assertEquals(m.remove(12), null);
     }
 
     @Test
