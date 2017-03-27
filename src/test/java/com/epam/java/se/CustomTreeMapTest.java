@@ -227,6 +227,12 @@ public class CustomTreeMapTest {
 
     @Test
     public void testThatWeCanClearEntireMap() {
+        m.put(12, "eee");
+        m.put(6, "ddd");
+        m.put(1, "vvv");
 
+        m.clear();
+
+        assertThat(m.size(), is(0));
     }
 }
