@@ -10,6 +10,8 @@ import java.util.Set;
  */
 public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     private Node<K, V> root;
+    private static final boolean RED = true;
+    private static final boolean BLACK = false;
 
     @Override
     public int size() {
@@ -47,23 +49,6 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
                 getLeftValue(root, (V) value) != null;
     }
 
-    @Override
-    public V get(Object key) {
-        Objects.requireNonNull(key);
-        return get(root, (K) key);
-    }
-
-    private V get(Node<K, V> node, K key) {
-        if (node == null) {
-            return null;
-        }
-        if (node.key.compareTo(key) > 0) {
-            return get(node.left, key);
-        } else if (node.key.compareTo(key) < 0) {
-            return get(node.right, key);
-        } else return node.value;
-    }
-
     private V getRightValue(Node<K, V> node, V value) {
         if (node == null) {
             return null;
@@ -85,15 +70,33 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     }
 
     @Override
+    public V get(Object key) {
+        Objects.requireNonNull(key);
+        return get(root, (K) key);
+    }
+
+    private V get(Node<K, V> node, K key) {
+        if (node == null) {
+            return null;
+        }
+        if (node.key.compareTo(key) > 0) {
+            return get(node.left, key);
+        } else if (node.key.compareTo(key) < 0) {
+            return get(node.right, key);
+        } else return node.value;
+    }
+
+    @Override
     public V put(K key, V value) {
         Objects.requireNonNull(key);
         root = put(root, key, value);
+        root.color = BLACK;
         return value;
     }
 
     private Node<K, V> put(Node<K, V> node, K key, V value) {
         if (node == null) {
-            return new Node<>(key, value, 1);
+            return new Node<>(key, value, RED, 1);
         }
         if (node.key.equals(key)) {
             node.value = value;
@@ -102,8 +105,53 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         } else {
             node.right = put(node.right, key, value);
         }
+
+        if (isRed(node.right) && !isRed(node.left)) {
+            node = rotateLeft(node);
+        }
+        if (isRed(node.left) && isRed(node.left.left)) {
+            node = rotateRight(node);
+        }
+        if (isRed(node.left) && isRed(node.right)) {
+            flipColors(node);
+        }
         node.size = size(node.left) + size(node.right) + 1;
         return node;
+    }
+
+    private Node rotateRight(Node node) {
+        Node newNode = node.left;
+        node.left = newNode.right;
+        newNode.right = node;
+        newNode.color = newNode.right.color;
+        newNode.right.color = RED;
+        newNode.size = node.size;
+        node.size = size(node.left) + size(node.right) + 1;
+        return newNode;
+    }
+
+    private Node rotateLeft(Node node) {
+        Node newNode = node.right;
+        node.right = newNode.left;
+        newNode.left = node;
+        newNode.color = newNode.left.color;
+        newNode.left.color = RED;
+        newNode.size = node.size;
+        node.size = size(node.left) + size(node.right) + 1;
+        return newNode;
+    }
+
+    private void flipColors(Node node) {
+        node.color = !node.color;
+        node.left.color = !node.left.color;
+        node.right.color = !node.right.color;
+    }
+
+    private boolean isRed(Node node) {
+        if (node == null) {
+            return false;
+        }
+        return node.color == RED;
     }
 
     private Node<K, V> find(Node<K, V> node, K key) {
@@ -173,8 +221,8 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
 
     @Override
     public void clear() {
-        if (root!=null){
-            root=null;
+        if (root != null) {
+            root = null;
         }
     }
 
@@ -199,16 +247,20 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     }
 
     private class Node<K extends Comparable<K>, V> {
+
         private final K key;
         private V value;
         private Node<K, V> left;
         private Node<K, V> right;
         private int size;
+        private boolean color;
 
-        public Node(K key, V value, int size) {
+
+        public Node(K key, V value, boolean color, int size) {
             this.key = key;
             this.value = value;
             this.size = size;
+            this.color = color;
         }
 
     }
