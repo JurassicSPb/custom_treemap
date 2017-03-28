@@ -25,6 +25,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
      */
     @Override
     public int size() {
+        showHeight();
         return size(root);
     }
 
@@ -287,6 +288,32 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         if (node.left == null) {
             return node;
         } else return findMin(node.left);
+    }
+
+
+    /**
+     * Shows height of left and right branches
+     * for testing if tree is balanced.
+     * Is used in size() method.
+     * @see CustomTreeMap#size(Node)
+     */
+    public void showHeight() {
+        String format = "Height of left subtree: %d, Height of right subtree: %d";
+        System.out.println(String.format(format, heightOfLeftSubtree(root), heightOfRightSubtree(root)));
+    }
+
+    private int heightOfLeftSubtree(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        return heightOfLeftSubtree(node.left) + 1;
+    }
+
+    private int heightOfRightSubtree(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        return heightOfRightSubtree(node.right) + 1;
     }
 
     /**

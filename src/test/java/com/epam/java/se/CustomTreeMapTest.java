@@ -114,13 +114,14 @@ public class CustomTreeMapTest {
 
     @Test
     public void testThatWeCanPut1000DifferentKeysInMap() {
-        IntStream.range(1, 1000).forEach(
+        IntStream.range(1, 100000).forEach(
                 i -> m.put(i, String.valueOf(i))
         );
 
-        IntStream.range(1, 1000).forEach(
+        IntStream.range(1, 100000).forEach(
                 i -> assertTrue(m.containsKey(i))
         );
+        System.out.println(m.size());
     }
 
     @Test
@@ -131,6 +132,19 @@ public class CustomTreeMapTest {
 
         assertThat(m.size(), is(3));
     }
+
+    @Test
+    public void showThatMapIsBalanced() {
+        IntStream.range(1, 100000).forEach(
+                i -> m.put(i, String.valueOf(i))
+        );
+
+        IntStream.range(1, 100000).forEach(
+                i -> assertTrue(m.containsKey(i))
+        );
+        System.out.println(m.size());
+    }
+
     @Test
     public void testContainsValueMethodCanSearchMultipleValues() {
         String value = "aaaa";
