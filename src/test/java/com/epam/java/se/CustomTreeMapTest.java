@@ -52,8 +52,11 @@ public class CustomTreeMapTest {
     public void testThatWeCanPutKeyValuePairAndCanCheckIt() {
         m.put(new Integer(3), "abc");
         m.put(new Integer(5), "rtr");
+        m.put(new Integer(23423), "efefe");
+
         assertThat(m.containsKey(3), is(true));
         assertThat(m.containsKey(5), is(true));
+        assertThat(m.containsKey(23423), is(true));
     }
 
     @Test(expected = NullPointerException.class)
@@ -110,12 +113,12 @@ public class CustomTreeMapTest {
     }
 
     @Test
-    public void testThatWeCanPut10DifferentKeysInMap() {
-        IntStream.range(1, 10).forEach(
+    public void testThatWeCanPut1000DifferentKeysInMap() {
+        IntStream.range(1, 1000).forEach(
                 i -> m.put(i, String.valueOf(i))
         );
 
-        IntStream.range(1, 10).forEach(
+        IntStream.range(1, 1000).forEach(
                 i -> assertTrue(m.containsKey(i))
         );
     }
