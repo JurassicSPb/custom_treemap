@@ -25,7 +25,6 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
      */
     @Override
     public int size() {
-        showHeight();
         return size(root);
     }
 
@@ -71,7 +70,9 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
      */
     @Override
     public boolean containsValue(Object value) {
-        if (root == null) return false;
+        if (root == null) {
+            return false;
+        }
         if (root.value == null) {
             return value == null;
         }
@@ -290,30 +291,54 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         } else return findMin(node.left);
     }
 
+    /**
+     * @return common height of this TreeMap
+     */
+    public int commonHeight() {
+        return Math.max(heightOfLeftSubtree(), heightOfRightSubtree());
+    }
 
     /**
-     * Shows height of left and right branches
-     * for testing if tree is balanced.
-     * Is used in size() method.
-     * @see CustomTreeMap#size(Node)
+     * @return height of left branches of this TreeMap
      */
-    public void showHeight() {
-        String format = "Height of left subtree: %d, Height of right subtree: %d";
-        System.out.println(String.format(format, heightOfLeftSubtree(root), heightOfRightSubtree(root)));
+    public int heightOfLeftSubtree() {
+        return leftHeight(root);
     }
 
-    private int heightOfLeftSubtree(Node node) {
+    /**
+     * @return height of right branches of this TreeMap
+     */
+    public int heightOfRightSubtree() {
+        return rightHeight(root);
+    }
+
+    private int leftHeight(Node node) {
         if (node == null) {
             return 0;
         }
-        return heightOfLeftSubtree(node.left) + 1;
+        return leftHeight(node.left) + 1;
     }
 
-    private int heightOfRightSubtree(Node node) {
+    private int rightHeight(Node node) {
         if (node == null) {
             return 0;
         }
-        return heightOfRightSubtree(node.right) + 1;
+        return rightHeight(node.right) + 1;
+    }
+
+    /**
+     * @return true if height of left branches equals or one less
+     * than height of right branches and visa versa.
+     */
+    public boolean isBalanced() {
+        if (heightOfLeftSubtree() == heightOfRightSubtree()) {
+            return true;
+        }
+        if (heightOfRightSubtree() - heightOfLeftSubtree() == 1 ||
+                (heightOfRightSubtree() - heightOfLeftSubtree() == -1)) {
+            return true;
+        }
+        return false;
     }
 
     /**

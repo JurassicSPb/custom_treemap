@@ -134,15 +134,38 @@ public class CustomTreeMapTest {
     }
 
     @Test
-    public void showThatMapIsBalanced() {
+    public void showThatWeCanCheckTreeMapAndItsBranchesHeight() {
+        CustomTreeMap map = new CustomTreeMap();
+
         IntStream.range(1, 100000).forEach(
-                i -> m.put(i, String.valueOf(i))
+                i -> map.put(i, String.valueOf(i))
         );
 
         IntStream.range(1, 100000).forEach(
-                i -> assertTrue(m.containsKey(i))
+                i -> assertTrue(map.containsKey(i))
         );
-        System.out.println(m.size());
+        assertThat(map.commonHeight(), is(17));
+        assertThat(map.heightOfLeftSubtree(), is(17));
+        assertThat(map.heightOfRightSubtree(), is(16));
+
+
+    }
+    @Test
+    public void testIfMapIsBalanced() {
+        CustomTreeMap map = new CustomTreeMap();
+
+        IntStream.range(1, 100000).forEach(
+                i -> map.put(i, String.valueOf(i))
+        );
+
+        assertThat(map.isBalanced(), is(true));
+
+        IntStream.range(200, 15000).forEach(
+                i -> map.remove(i, String.valueOf(i))
+        );
+
+        assertThat(map.isBalanced(), is(false));
+
     }
 
     @Test
