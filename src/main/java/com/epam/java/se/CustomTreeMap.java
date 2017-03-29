@@ -13,6 +13,7 @@ import java.util.Set;
  */
 public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     private Node<K, V> root;
+    private V savePreviousValue;
     private static final boolean RED = true;
     private static final boolean BLACK = false;
 
@@ -150,7 +151,10 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         Objects.requireNonNull(key);
         root = put(root, key, value);
         root.color = BLACK;
-        return value;
+        if (savePreviousValue !=null){
+            return savePreviousValue;
+        }
+        return null;
     }
 
     private Node<K, V> put(Node<K, V> node, K key, V value) {
@@ -158,6 +162,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
             return new Node<>(key, value, RED, 1);
         }
         if (node.key.equals(key)) {
+            savePreviousValue = node.value;
             node.value = value;
         } else if (node.key.compareTo(key) > 0) {
             node.left = put(node.left, key, value);
@@ -191,8 +196,8 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         }
     }
 
-    private Node rotateRight(Node node) {
-        Node newNode = node.left;
+    private Node rotateRight(Node<K, V> node) {
+        Node<K, V> newNode = node.left;
         node.left = newNode.right;
         newNode.right = node;
         newNode.color = newNode.right.color;
@@ -202,8 +207,8 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         return newNode;
     }
 
-    private Node rotateLeft(Node node) {
-        Node newNode = node.right;
+    private Node rotateLeft(Node<K, V> node) {
+        Node<K, V> newNode = node.right;
         node.right = newNode.left;
         newNode.left = node;
         newNode.color = newNode.left.color;
@@ -213,13 +218,13 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         return newNode;
     }
 
-    private void flipColors(Node node) {
+    private void flipColors(Node<K, V> node) {
         node.color = !node.color;
         node.left.color = !node.left.color;
         node.right.color = !node.right.color;
     }
 
-    private boolean isRed(Node node) {
+    private boolean isRed(Node<K, V> node) {
         if (node == null) {
             return false;
         }
@@ -232,8 +237,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
      * Associated methods:
      *
      * @param key key whose mapping is to be removed from the map
-     * @return the previous value associated with key, or
-     * null if there was no mapping for key.
+     * @return null, there is no way to return old value.
      * @throws NullPointerException if the specified key is null.
      * @see CustomTreeMap#remove(Node, Comparable)
      * @see CustomTreeMap#removeMin(Node)
@@ -387,6 +391,5 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
             this.size = size;
             this.color = color;
         }
-
     }
 }

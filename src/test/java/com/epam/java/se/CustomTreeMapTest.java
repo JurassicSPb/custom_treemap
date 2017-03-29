@@ -3,8 +3,10 @@ package com.epam.java.se;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+
 import java.util.Map;
 import java.util.stream.IntStream;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -90,7 +92,7 @@ public class CustomTreeMapTest {
 
     @Test(expected = ClassCastException.class)
     public void testThatContainsKeyMethodThrowsExceptionOnWrongKeyClass() {
-        m.put(1, ""); //TODO need to remove
+        m.put(1, "");
         m.containsKey(new String(""));
     }
 
@@ -150,6 +152,7 @@ public class CustomTreeMapTest {
 
 
     }
+
     @Test
     public void testIfMapIsBalanced() {
         CustomTreeMap map = new CustomTreeMap();
@@ -220,7 +223,7 @@ public class CustomTreeMapTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testThatGetMethodThrowsExceptionOnNullKey(){
+    public void testThatGetMethodThrowsExceptionOnNullKey() {
         m.get(null);
     }
 
@@ -241,7 +244,7 @@ public class CustomTreeMapTest {
         assertThat(m.containsKey(2), is(true));
     }
 
-    @Test (expected = NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void testRemoveWithNullKey() {
         m.remove(null);
     }
@@ -260,8 +263,30 @@ public class CustomTreeMapTest {
     }
 
     @Test
-    public void testRemoveUnexistentKeyReturnsNull() {
-        assertEquals(m.remove(12), null);
+    public void tesThatPuttingElementWithSameKeyWillReturnPreviousValue() {
+        String a = m.put(7, "aaa");
+        String b = m.put(7, "bbb");
+
+        assertThat(b, is("aaa"));
+        assertEquals(a, null);
+    }
+
+    @Test
+    public void testThatIfRootIsNullRemovingKeyReturnsNull() {
+        m.put(9, "aaa");
+
+        assertEquals(m.remove(9), null);
+
+    }
+
+    @Test
+    public void testThatRemovingUnexistentKeyReturnsNull() {
+        m.put(6, "aaa");
+        m.put(444, "bbb");
+        m.put(78, "ccc");
+
+        assertEquals(m.remove(9), null);
+
     }
 
     @Test
