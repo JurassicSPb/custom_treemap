@@ -158,6 +158,9 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     }
 
     private Node<K, V> put(Node<K, V> node, K key, V value) {
+        if (savePreviousValue!=null){
+            savePreviousValue = null;
+        }
         if (node == null) {
             return new Node<>(key, value, RED, 1);
         }

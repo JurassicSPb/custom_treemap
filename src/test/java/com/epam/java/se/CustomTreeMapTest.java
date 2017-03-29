@@ -269,6 +269,9 @@ public class CustomTreeMapTest {
 
         assertThat(b, is("aaa"));
         assertEquals(a, null);
+
+        String c = m.put(6, "ccc");
+        assertEquals(c, null);
     }
 
     @Test
