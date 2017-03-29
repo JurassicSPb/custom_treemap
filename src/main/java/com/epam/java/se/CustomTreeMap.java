@@ -358,9 +358,17 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         }
     }
 
+    /**
+     * Copies all of the mappings from the specified map to this map
+     * @param m - mappings from specified map to be stored in this map
+     * @throws NullPointerException if specified map or it's key is null.
+     */
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
-
+        for (Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
+            Objects.requireNonNull(entry.getKey());
+            put(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override

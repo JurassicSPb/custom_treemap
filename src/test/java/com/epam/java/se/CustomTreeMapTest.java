@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
@@ -301,5 +302,29 @@ public class CustomTreeMapTest {
         m.clear();
 
         assertThat(m.size(), is(0));
+    }
+
+    @Test
+    public void testThatWeCanCopyAnotherMapToOurMap() {
+        Map<Integer, String> hashmap = new HashMap<>();
+        hashmap.put(14, "ffff");
+        hashmap.put(100, "ffff");
+        hashmap.put(232, "qwswd");
+        m.putAll(hashmap);
+
+        assertThat(m.containsKey(232), is(true));
+        assertThat(m.containsKey(100), is(true));
+    }
+
+    @Test (expected = NullPointerException.class)
+    public void testThatWeCantCopyAnotherMapToOurMapIfItsKeyIsNull() {
+        Map<Integer, String> hashmap = new HashMap<>();
+        hashmap.put(null, "d");
+        m.putAll(hashmap);
+    }
+
+    @Test (expected = NullPointerException.class)
+    public void testThatWeCatnCopyAnotherMapToOurMapIfItsNull() {
+        m.putAll(null);
     }
 }
