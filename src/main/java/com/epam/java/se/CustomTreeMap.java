@@ -1,9 +1,6 @@
 package com.epam.java.se;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class represents an implementation of Custom TreeMap which is
@@ -66,8 +63,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
      * @param value value whose presence in this map is to be tested,
      *              allows null values.
      * @return true specified value is presented in one or more keys
-     * @see CustomTreeMap#getLeftValue(Node, Object)
-     * @see CustomTreeMap#getRightValue(Node, Object)
+     * @see CustomTreeMap#getValue(Node, Object)
      */
     @Override
     public boolean containsValue(Object value) {
@@ -77,28 +73,23 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         if (root.value == null) {
             return value == null;
         }
-        return getRightValue(root, (V) value) != null ||
-                getLeftValue(root, (V) value) != null;
+        return getValue(root, (V) value) != null;
     }
 
-    private V getRightValue(Node<K, V> node, V value) {
+    private Node<K, V> getValue(Node<K, V> node, V value) {
         if (node == null) {
             return null;
         }
-        if (!node.value.equals(value)) {
-            return getRightValue(node.right, value);
+        if (node.value.equals(value)) {
+            return node;
         }
-        return node.value;
-    }
 
-    private V getLeftValue(Node<K, V> node, V value) {
-        if (node == null) {
-            return null;
+        if (getValue(node.left, value) != null) {
+            return node;
+        } else if (getValue(node.right, value) != null) {
+            return node;
         }
-        if (!node.value.equals(value)) {
-            return getLeftValue(node.left, value);
-        }
-        return node.value;
+        return null;
     }
 
     /**
@@ -151,14 +142,14 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         Objects.requireNonNull(key);
         root = put(root, key, value);
         root.color = BLACK;
-        if (savePreviousValue !=null){
+        if (savePreviousValue != null) {
             return savePreviousValue;
         }
         return null;
     }
 
     private Node<K, V> put(Node<K, V> node, K key, V value) {
-        if (savePreviousValue!=null){
+        if (savePreviousValue != null) {
             savePreviousValue = null;
         }
         if (node == null) {
@@ -360,6 +351,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
 
     /**
      * Copies all of the mappings from the specified map to this map
+     *
      * @param m - mappings from specified map to be stored in this map
      * @throws NullPointerException if specified map or it's key is null.
      */
@@ -371,22 +363,53 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         }
     }
 
+    /**
+     * @return returns a Set of the keys contained in this map.
+     */
     @Override
     public Set<K> keySet() {
-        return null;
+        Set<K> keySet = new HashSet<>();
+        for (Entry<K, V> node : listOfNodes()) {
+            keySet.add(node.getKey());
+        }
+        return keySet;
     }
 
+    /**
+     * @return returns a Collection of values contained in this map.
+     */
     @Override
     public Collection<V> values() {
-        return null;
+        List<V> values = new ArrayList<>();
+        for (Entry<K, V> node : listOfNodes()) {
+            values.add(node.getValue());
+        }
+        return values;
     }
 
+    /**
+     * @return returns a Set of the key-value pairs contained in this map.
+     */
     @Override
     public Set<Entry<K, V>> entrySet() {
-        return null;
+        return new HashSet<>(listOfNodes());
     }
 
-    private class Node<K extends Comparable<K>, V> {
+    private List<Map.Entry<K, V>> listOfNodes() {
+        List<Map.Entry<K, V>> nodes = new ArrayList<>();
+        nodesToList(root, nodes);
+        return nodes;
+    }
+
+    private void nodesToList(Node<K, V> node, List<Map.Entry<K, V>> nodes) {
+        if (node != null) {
+            nodesToList(node.left, nodes);
+            nodes.add(node);
+            nodesToList(node.right, nodes);
+        }
+    }
+
+    private class Node<K extends Comparable<K>, V> implements Map.Entry<K, V> {
 
         private final K key;
         private V value;
@@ -401,6 +424,23 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
             this.value = value;
             this.size = size;
             this.color = color;
+        }
+
+        @Override
+        public V getValue() {
+            return value;
+        }
+
+        @Override
+        public K getKey() {
+            return key;
+        }
+
+        @Override
+        public V setValue(V value) {
+            V prev = this.value;
+            this.value = value;
+            return prev;
         }
     }
 }

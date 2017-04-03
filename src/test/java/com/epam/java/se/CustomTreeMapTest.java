@@ -4,8 +4,7 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -324,7 +323,55 @@ public class CustomTreeMapTest {
     }
 
     @Test (expected = NullPointerException.class)
-    public void testThatWeCatnCopyAnotherMapToOurMapIfItsNull() {
+    public void testThatWeCantCopyAnotherMapToOurMapIfItsNull() {
         m.putAll(null);
     }
+
+    @Test
+    public void keySetTest() {
+        IntStream.range(0, 100).forEach(
+                i -> m.put(i, String.valueOf(i))
+        );
+
+        Set<Integer> keySet = m.keySet();
+
+        assertEquals(keySet.size(), m.size());
+
+
+        for (Integer key : keySet){
+            assertThat(m.containsKey(key), is(true));
+        }
+    }
+
+    @Test
+    public void valuesTest() {
+        IntStream.range(0, 100).forEach(
+                i -> m.put(i, String.valueOf(i))
+        );
+
+        Collection<String> valuesColl = m.values();
+
+        assertEquals(valuesColl.size(), m.size());
+
+
+        for (String value : valuesColl){
+            assertThat(m.containsValue(value), is(true));
+        }
+    }
+    @Test
+    public void entrySetTest() {
+        IntStream.range(0, 100).forEach(
+                i -> m.put(i, String.valueOf(i))
+        );
+
+        Set<Map.Entry<Integer, String>> entrySet = m.entrySet();
+
+        assertEquals(entrySet.size(), m.size());
+
+        for (Map.Entry<Integer, String> entry : entrySet) {
+            assertThat(m.containsKey(entry.getKey()), is(true));
+            assertThat(m.containsValue(entry.getValue()), is(true));
+        }
+    }
+
 }
