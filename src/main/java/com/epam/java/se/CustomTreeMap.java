@@ -190,7 +190,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         }
     }
 
-    private Node rotateRight(Node<K, V> node) {
+    private Node <K, V> rotateRight(Node<K, V> node) {
         Node<K, V> newNode = node.left;
         node.left = newNode.right;
         newNode.right = node;
@@ -201,7 +201,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         return newNode;
     }
 
-    private Node rotateLeft(Node<K, V> node) {
+    private Node <K, V> rotateLeft(Node<K, V> node) {
         Node<K, V> newNode = node.right;
         node.right = newNode.left;
         newNode.left = node;
@@ -244,7 +244,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         return null;
     }
 
-    private Node remove(Node<K, V> node, K key) {
+    private Node <K, V> remove(Node<K, V> node, K key) {
         if (node == null) {
             return null;
         }
@@ -259,7 +259,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
             if (node.left == null) {
                 return node.right;
             }
-            Node temp = node;
+            Node <K, V> temp = node;
             node = findMin(temp.right);
             node.right = removeMin(temp.right);
             node.left = temp.left;
@@ -268,7 +268,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         return node;
     }
 
-    private Node removeMin(Node<K, V> node) {
+    private Node <K, V> removeMin(Node<K, V> node) {
         if (node == null) {
             return null;
         }
@@ -280,7 +280,7 @@ public class CustomTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         return node;
     }
 
-    private Node findMin(Node<K, V> node) {
+    private Node <K, V> findMin(Node<K, V> node) {
         if (node == null) {
             return null;
         }
