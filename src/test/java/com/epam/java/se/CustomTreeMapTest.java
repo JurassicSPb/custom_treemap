@@ -360,7 +360,7 @@ public class CustomTreeMapTest {
     }
     @Test
     public void entrySetTest() {
-        IntStream.range(0, 100).forEach(
+        IntStream.range(0, 1000).forEach(
                 i -> m.put(i, String.valueOf(i))
         );
 
